@@ -56,8 +56,7 @@ impl File {
                             assert!(current_base.is_some());
 							// println!("current base is {} {}",current_base.clone().unwrap().base_bits,current_base.clone().unwrap().base);
 							let tagged_union= TaggedUnion::parse(pair);
-							let exception_name = String::from("pte");
-							if tagged_union.name != exception_name {
+							if tagged_union.name != String::from("pte") {
 								tagged_unions.push(Entity {
 									base: current_base.as_ref().unwrap().clone(),
 									inner: tagged_union,
@@ -127,7 +126,7 @@ impl Block {
                     assert_eq!(visible_order_spec.as_rule(), Rule::visible_order_spec);
                     visible_order_spec
                         .into_inner()
-                        .map(|pair| pair.as_str().to_owned())
+                        .map(|pair| {println!("visible:{}",pair.as_str());pair.as_str().to_owned()})
                         .collect::<Vec<Ident>>()
                 });
         let segments_pair = pairs.next().unwrap();

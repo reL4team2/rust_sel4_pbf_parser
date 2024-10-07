@@ -56,12 +56,15 @@ impl File {
             .tagged_unions
             .iter()
             .map(|orig_tagged_union| {
-                let tag_name = orig_tagged_union.inner.tag_name.clone();
+                let mut tag_name = orig_tagged_union.inner.tag_name.clone();
 				println!("tag name is {}",tag_name);
                 let base = simplify_base(&orig_tagged_union.base);
                 assert_eq!(orig_tagged_union.inner.tag_slices.len(), 1);
                 assert_eq!(orig_tagged_union.inner.tag_slices[0], tag_name);
                 assert!(orig_tagged_union.inner.classes.is_empty());
+				if tag_name == String::from("type"){
+					tag_name= String::from("types");
+				}
                 let blocks_with_values = orig_tagged_union
                     .inner
                     .tags
@@ -137,8 +140,12 @@ impl Block {
         for segment in orig.inner.segments.iter().rev() {
             if let Some(field) = &segment.field {
                 assert!(!field.is_high);
+				let mut field_name = field.name.clone();
+				if field_name == String::from("type"){
+					field_name = String::from("types");
+				}
                 fields.push(Field {
-                    name: field.name.clone(),
+                    name: field_name,
                     offset: cur_offset,
                     width: segment.width,
                 })

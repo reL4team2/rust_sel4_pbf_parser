@@ -10,7 +10,7 @@ fn main() {
 
 	let mut blocklist_for_bindgen = vec![];
     println!("start generate the rs,current path is {}!",env::current_dir().unwrap().display());
-	for f in glob(&format!("./bf/*.pbf"))
+	for f in glob(&format!("./pbf/*.pbf"))
 		.unwrap()
 		.map(Result::unwrap)
 	{
@@ -31,7 +31,7 @@ struct OutDir {
 impl OutDir {
     fn new() -> Self {
         Self {
-            path: Path::new("./bf").to_owned(),
+            path: Path::new("./pbf").to_owned(),
             rustfmt: Rustfmt::detect(),
         }
     }

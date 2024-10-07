@@ -219,6 +219,19 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "2b15c43186be67a4fd63bee50d0303afffcef381492ebe2c5d87f324e1b8815c"
 
 [[package]]
+name = "rust_sel4_pbf_parser"
+version = "0.1.0"
+dependencies = [
+ "glob",
+ "proc-macro2",
+ "quote",
+ "sel4-bitfield-parser",
+ "sel4-bitfield-types",
+ "sel4-rustfmt-helper",
+ "syn 1.0.109",
+]
+
+[[package]]
 name = "rustix"
 version = "0.38.37"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -282,19 +295,6 @@ dependencies = [
  "proc-macro2",
  "quote",
  "unicode-ident",
-]
-
-[[package]]
-name = "test_sel4_defs"
-version = "0.1.0"
-dependencies = [
- "glob",
- "proc-macro2",
- "quote",
- "sel4-bitfield-parser",
- "sel4-bitfield-types",
- "sel4-rustfmt-helper",
- "syn 1.0.109",
 ]
 
 [[package]]

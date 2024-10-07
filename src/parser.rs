@@ -2,10 +2,10 @@ use std::fs;
 use std::path::{Path, PathBuf};
 use std::env;
 use glob::glob;
-mod bf;
+use super::bf;
 use proc_macro2::TokenStream;
 use sel4_rustfmt_helper::Rustfmt;
-fn main() {
+fn pbf_parser() {
 	let out_dir = OutDir::new();
 
 	let mut blocklist_for_bindgen = vec![];

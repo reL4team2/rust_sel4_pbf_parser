@@ -1,5 +1,5 @@
 [package]
-name = "test_sel4_defs"
+name = "rust_sel4_pbf_parser"
 version = "0.1.0"
 edition = "2021"
 

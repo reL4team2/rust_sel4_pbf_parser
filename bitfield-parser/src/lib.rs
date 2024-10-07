@@ -126,7 +126,7 @@ impl Block {
                     assert_eq!(visible_order_spec.as_rule(), Rule::visible_order_spec);
                     visible_order_spec
                         .into_inner()
-                        .map(|pair| {println!("visible:{}",pair.as_str());pair.as_str().to_owned()})
+                        .map(|pair| pair.as_str().to_owned())
                         .collect::<Vec<Ident>>()
                 });
         let segments_pair = pairs.next().unwrap();

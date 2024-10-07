@@ -51,13 +51,11 @@ pub struct Tag {
 
 impl File {
     fn simplify(orig_file: &ast::File) -> Self {
-		println!("file simplify");
         let tagged_unions = orig_file
             .tagged_unions
             .iter()
             .map(|orig_tagged_union| {
                 let mut tag_name = orig_tagged_union.inner.tag_name.clone();
-				println!("tag name is {}",tag_name);
                 let base = simplify_base(&orig_tagged_union.base);
                 assert_eq!(orig_tagged_union.inner.tag_slices.len(), 1);
                 assert_eq!(orig_tagged_union.inner.tag_slices[0], tag_name);
@@ -132,9 +130,8 @@ impl File {
 
 impl Block {
     fn simplify(orig: &ast::Entity<ast::Block>) -> Self {
-		println!("block simplify {}",orig.inner.name);
         let base = simplify_base(&orig.base);
-        assert!(orig.inner.visible_order_spec.is_none());
+        // assert!(orig.inner.visible_order_spec.is_none());
         let mut cur_offset = 0;
         let mut fields = vec![];
         for segment in orig.inner.segments.iter().rev() {

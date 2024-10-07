@@ -1,0 +1,11 @@
+[package]
+name = "sel4-bitfield-parser"
+version = "0.1.0"
+authors = ["Nick Spinale <nick.spinale@coliasgroup.com>"]
+edition = "2021"
+license = "BSD-2-Clause"
+
+[dependencies]
+pest = "2.4.1"
+pest_derive = "2.4.1"
+regex = "1.7.0"

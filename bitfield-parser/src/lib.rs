@@ -55,10 +55,14 @@ impl File {
 							// println!("pair string :{}***",pair.as_str());
                             assert!(current_base.is_some());
 							// println!("current base is {} {}",current_base.clone().unwrap().base_bits,current_base.clone().unwrap().base);
-                            tagged_unions.push(Entity {
-                                base: current_base.as_ref().unwrap().clone(),
-                                inner: TaggedUnion::parse(pair),
-                            })
+							let tagged_union= TaggedUnion::parse(pair);
+							let exception_name = String::from("pte");
+							if tagged_union.name != exception_name {
+								tagged_unions.push(Entity {
+									base: current_base.as_ref().unwrap().clone(),
+									inner: tagged_union,
+								})
+							}
                         }
                         _ => {
                             unreachable!()
@@ -83,7 +87,6 @@ impl Base {
     fn parse(pair: Pair<Rule>) -> Self {
         assert_eq!(pair.as_rule(), Rule::base);
         let mut pairs = pair.into_inner();
-		println!("pairs is {}",pairs.as_str());
         let base = pairs.next().unwrap().as_str().parse().unwrap();
         let opt_base_mask = pairs.next().unwrap();
         assert_eq!(opt_base_mask.as_rule(), Rule::opt_base_mask);
@@ -98,7 +101,6 @@ impl Base {
             }
             None => (base, false),
         };
-		println!("base parse base_bits is {} {}",base,base_bits);
         Self {
             base,
             base_bits,
@@ -172,9 +174,7 @@ impl TaggedUnion {
         assert_eq!(pair.as_rule(), Rule::tagged_union);
         let mut pairs = pair.into_inner();
         let name = pairs.next().unwrap().as_str().to_owned();
-		println!("tagged union name is {}",name);
         let tag_name = pairs.next().unwrap().as_str().to_owned();
-		println!("tagged union tag_name is {}",name);
         let opt_tag_slices = pairs.next().unwrap();
         assert_eq!(opt_tag_slices.as_rule(), Rule::opt_tag_slices);
         let tag_slices = match opt_tag_slices.into_inner().next() {

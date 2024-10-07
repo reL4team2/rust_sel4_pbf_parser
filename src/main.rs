@@ -31,7 +31,7 @@ struct OutDir {
 impl OutDir {
     fn new() -> Self {
         Self {
-            path: Path::new("./").to_owned(),
+            path: Path::new("./bf").to_owned(),
             rustfmt: Rustfmt::detect(),
         }
     }

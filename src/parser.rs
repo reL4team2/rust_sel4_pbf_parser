@@ -5,12 +5,12 @@ use glob::glob;
 use super::bf;
 use proc_macro2::TokenStream;
 use sel4_rustfmt_helper::Rustfmt;
-fn pbf_parser() {
-	let out_dir = OutDir::new();
+fn pbf_parser(in_dir:String, out_dir:String) {
+	let out_dir = OutDir::new(out_dir);
 
 	let mut blocklist_for_bindgen = vec![];
     println!("start generate the rs,current path is {}!",env::current_dir().unwrap().display());
-	for f in glob(&format!("./pbf/*.pbf"))
+	for f in glob(&format!("{}/*.pbf",in_dir))
 		.unwrap()
 		.map(Result::unwrap)
 	{
@@ -29,9 +29,9 @@ struct OutDir {
 }
 
 impl OutDir {
-    fn new() -> Self {
+    fn new(out_dir:String) -> Self {
         Self {
-            path: Path::new("./pbf").to_owned(),
+            path: Path::new(out_dir.as_str()).to_owned(),
             rustfmt: Rustfmt::detect(),
         }
     }

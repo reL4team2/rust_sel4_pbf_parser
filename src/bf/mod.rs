@@ -122,7 +122,7 @@ impl<'a> BitfieldGenerator<'a> {
 					methods.extend(quote! {
 						#[allow(dead_code)]
 						#visibility fn #get_method_ident(&self) -> #primitive_type {
-							let mut ret = self.0.get_bits(#field_range_start..#field_range_end) << #field_high_start
+							let mut ret = self.0.get_bits(#field_range_start..#field_range_end) << #field_high_start ;
 							if ret & (1usize << 47) == 1{
 								ret |= !0 << (64 - #field_sign_extend_bits);
 							}

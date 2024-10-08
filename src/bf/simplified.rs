@@ -31,6 +31,7 @@ pub struct Field {
     pub name: String,
     pub offset: usize,
     pub width: usize,
+    pub field_high: bool,
 }
 
 #[derive(Debug)]
@@ -60,9 +61,9 @@ impl File {
                 assert_eq!(orig_tagged_union.inner.tag_slices.len(), 1);
                 assert_eq!(orig_tagged_union.inner.tag_slices[0], tag_name);
                 assert!(orig_tagged_union.inner.classes.is_empty());
-				if tag_name == String::from("type"){
-					tag_name= String::from("types");
-				}
+                if tag_name == String::from("type") {
+                    tag_name = String::from("types");
+                }
                 let blocks_with_values = orig_tagged_union
                     .inner
                     .tags
@@ -137,14 +138,15 @@ impl Block {
         for segment in orig.inner.segments.iter().rev() {
             if let Some(field) = &segment.field {
                 // assert!(!field.is_high);
-				let mut field_name = field.name.clone();
-				if field_name == String::from("type"){
-					field_name = String::from("types");
-				}
+                let mut field_name = field.name.clone();
+                if field_name == String::from("type") {
+                    field_name = String::from("types");
+                }
                 fields.push(Field {
                     name: field_name,
                     offset: cur_offset,
                     width: segment.width,
+                    field_high: field.is_high,
                 })
             }
             cur_offset += segment.width;

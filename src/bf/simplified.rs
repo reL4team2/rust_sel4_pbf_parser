@@ -32,8 +32,8 @@ pub struct Field {
     pub offset: usize,
     pub width: usize,
     pub field_high: bool,
-	pub sign_extend: bool,
-	pub sign_extend_bits: usize,
+    pub sign_extend: bool,
+    pub sign_extend_bits: usize,
 }
 
 #[derive(Debug)]
@@ -149,8 +149,8 @@ impl Block {
                     offset: cur_offset,
                     width: segment.width,
                     field_high: field.is_high,
-					sign_extend: orig.base.sign_extend,
-					sign_extend_bits: orig.base.base-orig.base.base_bits,
+                    sign_extend: orig.base.sign_extend,
+                    sign_extend_bits: orig.base.base - orig.base.base_bits,
                 })
             }
             cur_offset += segment.width;

@@ -76,6 +76,7 @@ impl<'a> BitfieldGenerator<'a> {
             let width_method_ident = format_ident!("width_of_{}", field.name);
             let field_range_start = field.offset;
             let mut field_high_start: usize = 0;
+			let field_sign_extend_bits = field.sign_extend_bits;
             if field.field_high {
                 field_high_start = field.offset;
                 while field_high_start >= 64 {
@@ -117,19 +118,39 @@ impl<'a> BitfieldGenerator<'a> {
             let visibility = if is_tag { quote!() } else { quote!(pub) };
 
             if field.field_high {
-                methods.extend(quote! {
-					#[allow(dead_code)]
-					#visibility fn #get_method_ident(&self) -> #primitive_type {
-						self.0.get_bits(#field_range_start..#field_range_end) << #field_high_start
-					}
-					#visibility fn #set_method_ident(&mut self, #field_name_ident: #primitive_type) {
-						self.0.set_bits(#field_range_start..#field_range_end, #field_name_ident >> #field_high_start)
-					}
-					#[allow(dead_code)]
-					#visibility const fn #width_method_ident() -> usize {
-						#field_range_end - #field_range_start
-					}
-				});
+				if field.sign_extend{
+					methods.extend(quote! {
+						#[allow(dead_code)]
+						#visibility fn #get_method_ident(&self) -> #primitive_type {
+							let mut ret = self.0.get_bits(#field_range_start..#field_range_end) << #field_high_start
+							if ret & (1usize << 47) == 1{
+								ret |= !0 << (64 - #field_sign_extend_bits);
+							}
+							ret
+						}
+						#visibility fn #set_method_ident(&mut self, #field_name_ident: #primitive_type) {
+							self.0.set_bits(#field_range_start..#field_range_end, #field_name_ident >> #field_high_start)
+						}
+						#[allow(dead_code)]
+						#visibility const fn #width_method_ident() -> usize {
+							#field_range_end - #field_range_start
+						}
+					});
+				}else{
+					methods.extend(quote! {
+						#[allow(dead_code)]
+						#visibility fn #get_method_ident(&self) -> #primitive_type {
+							self.0.get_bits(#field_range_start..#field_range_end) << #field_high_start
+						}
+						#visibility fn #set_method_ident(&mut self, #field_name_ident: #primitive_type) {
+							self.0.set_bits(#field_range_start..#field_range_end, #field_name_ident >> #field_high_start)
+						}
+						#[allow(dead_code)]
+						#visibility const fn #width_method_ident() -> usize {
+							#field_range_end - #field_range_start
+						}
+					});
+				}
             } else {
                 methods.extend(quote! {
 					#[allow(dead_code)]

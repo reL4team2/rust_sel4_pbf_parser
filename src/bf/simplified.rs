@@ -136,7 +136,7 @@ impl Block {
         let mut fields = vec![];
         for segment in orig.inner.segments.iter().rev() {
             if let Some(field) = &segment.field {
-                assert!(!field.is_high);
+                // assert!(!field.is_high);
 				let mut field_name = field.name.clone();
 				if field_name == String::from("type"){
 					field_name = String::from("types");

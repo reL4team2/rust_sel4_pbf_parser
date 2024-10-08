@@ -151,7 +151,7 @@ impl Segment {
                     let mut pairs = pair.into_inner();
                     let is_high = match pairs.next().unwrap().as_rule() {
                         Rule::field_low => false,
-                        Rule::field_high => false,
+                        Rule::field_high => true,
                         _ => unreachable!(),
                     };
                     let name = pairs.next().unwrap().as_str().to_owned();

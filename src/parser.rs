@@ -1,4 +1,6 @@
 use std::fs;
+use std::fs::OpenOptions;
+use std::io::Write;
 use std::path::{Path, PathBuf};
 use std::env;
 use glob::glob;
@@ -37,7 +39,18 @@ impl OutDir {
 
     fn write_file(&self, fragment: TokenStream, filename: impl AsRef<Path>) {
         let out_path = self.path.join(filename);
-        fs::write(&out_path, format!("{fragment}")).unwrap();
-        self.rustfmt.format(&out_path);
+		let mut file = OpenOptions::new()  
+			.append(true)
+			.create(true)
+			.open(out_path.clone())
+			.expect("cannot open file");
+		let context = format!("
+			use core::fmt;
+			use sel4_bitfield_types::Bitfield;
+		");
+        file.write_all(context.as_bytes()).unwrap();
+		let context = format!("{fragment}");
+        file.write_all(context.as_bytes()).unwrap();
+        self.rustfmt.format(&out_path.clone());
     }
 }

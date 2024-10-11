@@ -45,7 +45,7 @@ impl OutDir {
         let context = format!(
             "
 			use core::fmt;
-			use sel4_bitfield_types::Bitfield;
+			use crate::sel4_bitfield_types::Bitfield;
 		"
         );
         file.write_all(context.as_bytes()).unwrap();

@@ -83,6 +83,7 @@ impl<'a> BitfieldGenerator<'a> {
                     field_high_start -= 64;
                 }
 				field_range_start = 64 - field_sign_extend_bits - field.width;
+				field_high_start = field_range_start;
             }
             let field_range_end = field_range_start + field.width;
 

@@ -74,7 +74,7 @@ impl<'a> BitfieldGenerator<'a> {
             let get_method_ident = format_ident!("get_{}", field.name);
             let set_method_ident = format_ident!("set_{}", field.name);
             let width_method_ident = format_ident!("width_of_{}", field.name);
-            let field_range_start = field.offset;
+            let mut field_range_start = field.offset;
             let mut field_high_start: usize = 0;
             let field_sign_extend_bits = field.sign_extend_bits;
             if field.field_high {
@@ -82,8 +82,9 @@ impl<'a> BitfieldGenerator<'a> {
                 while field_high_start >= 64 {
                     field_high_start -= 64;
                 }
+				field_range_start = 64 - field_sign_extend_bits - field.width;
             }
-            let field_range_end = field.offset + field.width;
+            let field_range_end = field_range_start + field.width;
 
             let tag_info_for_this_field = tag_info
                 .as_ref()

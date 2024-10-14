@@ -69,7 +69,9 @@ impl<'a> BitfieldGenerator<'a> {
         let mut methods = quote!();
         let mut wrapper_functions = quote!();
 
-        for field in fields.iter() {
+		let mut iterator = fields.iter().peekable();
+
+		while let Some(field) = iterator.next(){
             let field_name_ident = format_ident!("{}", field.name);
             let get_method_ident = format_ident!("get_{}", field.name);
             let set_method_ident = format_ident!("set_{}", field.name);
@@ -78,12 +80,16 @@ impl<'a> BitfieldGenerator<'a> {
             let mut field_high_start: usize = 0;
             let field_sign_extend_bits = field.sign_extend_bits;
             if field.field_high {
-                field_high_start = field.offset;
+				if let Some(next_field) = iterator.peek(){
+					field_range_start = next_field.offset - field.width;
+				}
+				else{
+					field_range_start = (field.offset + 64 - 1) & !(64 - 1) - field.width;
+				}
+                field_high_start = field_range_start;
                 while field_high_start >= 64 {
                     field_high_start -= 64;
                 }
-				field_range_start = 64 - field_sign_extend_bits - field.width;
-				field_high_start = field_range_start;
             }
             let field_range_end = field_range_start + field.width;
 

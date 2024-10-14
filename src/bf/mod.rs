@@ -68,6 +68,7 @@ impl<'a> BitfieldGenerator<'a> {
         let mut new_body = quote!();
         let mut methods = quote!();
         let mut wrapper_functions = quote!();
+		let mut prev_offset=backing_type.multiple*64;
 
         for field in fields.iter() {
             let field_name_ident = format_ident!("{}", field.name);
@@ -78,11 +79,8 @@ impl<'a> BitfieldGenerator<'a> {
             let mut field_high_start: usize = 0;
             let field_sign_extend_bits = field.sign_extend_bits;
             if field.field_high {
-                field_high_start = field.offset;
-                while field_high_start >= 64 {
-                    field_high_start -= 64;
-                }
-				field_range_start = 64 - field_sign_extend_bits - field.width;
+				field_range_start = prev_offset - field.width;
+				field_high_start = 64 - field_sign_extend_bits - field.width
             }
             let field_range_end = field_range_start + field.width;
 
@@ -198,6 +196,7 @@ impl<'a> BitfieldGenerator<'a> {
                     }
                 })
             }
+			prev_offset= field.offset;
         }
 
         let alias_stmt = if tag_info.is_none() {

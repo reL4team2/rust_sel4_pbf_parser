@@ -208,7 +208,7 @@ impl<'a> BitfieldGenerator<'a> {
 
         self.native_toks.extend(quote! {
             #[repr(transparent)]
-            #[derive(Copy, Clone, Eq, PartialEq)]
+            #[derive(Clone, Eq, PartialEq)]
             pub struct #name_ident(pub #bitfield_type);
 
             #alias_stmt
@@ -237,7 +237,7 @@ impl<'a> BitfieldGenerator<'a> {
                 }
             }
 
-            #[derive(Debug, Copy, Clone, PartialEq, Eq)]
+            #[derive(Debug, Clone, PartialEq, Eq)]
             pub struct #unpacked_ident {
                 #(pub #non_tag_fields_with_types,)*
             }
@@ -344,7 +344,7 @@ impl<'a> BitfieldGenerator<'a> {
             }
 
             #[repr(transparent)]
-            #[derive(Copy, Clone, PartialEq, Eq)]
+            #[derive(Clone, PartialEq, Eq)]
             pub struct #name_ident(pub #bitfield_type);
 
             impl #name_ident {
@@ -368,7 +368,7 @@ impl<'a> BitfieldGenerator<'a> {
                 }
             }
 
-            #[derive(Debug, Copy, Clone, PartialEq, Eq)]
+            #[derive(Debug, Clone, PartialEq, Eq)]
             pub enum #splayed_ident {
                 #(#splayed_variants,)*
             }

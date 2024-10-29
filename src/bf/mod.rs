@@ -287,6 +287,7 @@ impl<'a> BitfieldGenerator<'a> {
         let mut splayed_variants = vec![];
         let mut splay_match_arms = vec![];
         let mut unsplay_match_arms = vec![];
+		let mut to_unsplay_type = vec![];
         let mut block_unsplay_toks = quote!();
 
         for tag in tagged_union.tags.iter() {
@@ -307,9 +308,16 @@ impl<'a> BitfieldGenerator<'a> {
             splay_match_arms.push(quote! {
                 #tag_values_module_ident::#tag_value_ident => #splayed_ident::#splayed_variant(#block_type(self.0))
             });
+
             unsplay_match_arms.push(quote! {
                 #splayed_ident::#splayed_variant(#block_type(bitfield)) => #name_ident(bitfield),
             });
+
+			to_unsplay_type.push(quote! {
+				pub fn #tag_value_ident(capability: &Self) -> &mut #tag_value_ident{
+					unsafe { (capability as *const _ as *mut #tag_value_ident).as_mut().unwrap() }
+				}
+			});
 
             self.generate_block(
                 &tag.name,
@@ -354,6 +362,8 @@ impl<'a> BitfieldGenerator<'a> {
                         _ => panic!(),
                     }
                 }
+
+				#(#to_unsplay_type)*
 
                 pub fn get_tag(&self) -> #primitive_type {
                     self.0.get_bits(#tag_range_start..#tag_range_end)

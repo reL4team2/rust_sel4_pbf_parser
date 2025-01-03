@@ -315,7 +315,7 @@ impl<'a> BitfieldGenerator<'a> {
 
 			to_unsplay_type.push(quote! {
 				pub fn #tag_value_ident(structure: &Self) -> &mut #tag_value_ident{
-					assert_ne!(structure.get_tag(),#tag_values_module_ident::#tag_value_ident);
+					assert_eq!(structure.get_tag(),#tag_values_module_ident::#tag_value_ident);
 					unsafe { (structure as *const _ as *mut #tag_value_ident).as_mut().unwrap() }
 				}
 			});

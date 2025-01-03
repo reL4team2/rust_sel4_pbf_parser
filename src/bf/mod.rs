@@ -175,18 +175,22 @@ impl<'a> BitfieldGenerator<'a> {
 
             if !is_tag {
                 wrapper_functions.extend(quote! {
+					#[inline]
                     #wrapper_get_prefix(this: #qualified_name) -> #primitive_type {
                         this.#get_method_ident()
                     }
+					#[inline]
                     #wrapper_set_prefix(mut this: #qualified_name, #field_name_ident: #primitive_type) -> #qualified_name {
                         this.#set_method_ident(#field_name_ident);
                         this
                     }
+					#[inline]
                     #wrapper_ptr_get_prefix(this: *mut #qualified_name) -> #primitive_type {
                         unsafe {
                             (&*this).#get_method_ident()
                         }
                     }
+					#[inline]
                     #wrapper_ptr_set_prefix(this: *mut #qualified_name, #field_name_ident: #primitive_type) {
                         unsafe {
                             (&mut *this).#set_method_ident(#field_name_ident);
@@ -314,6 +318,7 @@ impl<'a> BitfieldGenerator<'a> {
             });
 
 			to_unsplay_type.push(quote! {
+				#[inline]
 				pub fn #tag_value_ident(structure: &Self) -> &mut #tag_value_ident{
 					assert_eq!(structure.get_tag(),#tag_values_module_ident::#tag_value_ident);
 					unsafe { (structure as *const _ as *mut #tag_value_ident).as_mut().unwrap() }
